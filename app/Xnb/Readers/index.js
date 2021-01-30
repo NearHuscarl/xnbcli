@@ -20,7 +20,8 @@ const readers = [
     'UInt32Reader',
     'Vector2Reader',
     'Vector3Reader',
-    'Vector4Reader'
+    'Vector4Reader',
+    'SFDItemReader',
 ];
 
 // loop over readers to export them
@@ -48,5 +49,6 @@ module.exports = {
     UInt32Reader: require('./UInt32Reader'),
     Vector2Reader: require('./Vector2Reader'),
     Vector3Reader: require('./Vector3Reader'),
-    Vector4Reader: require('./Vector4Reader')
+    Vector4Reader: require('./Vector4Reader'),
+    SFDItemReader: require('./SFDItemReader')
 };

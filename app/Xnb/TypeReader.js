@@ -102,6 +102,10 @@ const simplifyType = type => {
         case 'BmFont.XmlSourceReader':
             return 'BmFont';
 
+        // SFD outfit: fighters clothes like shirt, pants, shoes, hats and accessories like tatoo, cigar, glasses, necklace...
+        case 'SFD.Content.ItemsContentTypeReader':
+            return 'SFDItem'
+
         // unimplemented type catch
         default:
             throw new XnbError(`Non-implemented type found, cannot resolve type "${simple}", "${type}".`);

@@ -73,21 +73,26 @@ const exportFile = (filename, xnbObject) => {
             case 'TBin':
                 extension = 'tbin';
                 break;
-            
+
             // BmFont Xml
             case 'BmFont':
                 extension = 'xml';
                 break;
         }
 
-        // output file name
-        const outputFilename = path.resolve(dirname, `${basename}.${extension}`);
+        if (exported.type === 'SFDItem') {
+            exportSFDItem(exported.data, filename)
+            delete content.parts
+        } else {
+            // output file name
+            const outputFilename = path.resolve(dirname, `${basename}.${extension}`);
 
-        // save the file
-        fs.writeFileSync(outputFilename, buffer);
+            // save the file
+            fs.writeFileSync(outputFilename, buffer);
 
-        // set the exported value to the path
-        foundContent['export'] = path.basename(outputFilename);
+            // set the exported value to the path
+            foundContent['export'] = path.basename(outputFilename);
+        }
     }
 
     // save the XNB object as JSON
@@ -99,9 +104,36 @@ const exportFile = (filename, xnbObject) => {
 
 exports.exportFile = exportFile;
 
+function exportSFDItem(exportedData, fileName) {
+    const dirname = path.dirname(fileName);
+    const basename = path.basename(fileName, '.json');
+
+    exportedData.forEach(({ textures, type }) => {
+        const isTexturesEmpty = textures.filter(Boolean).length === 0
+
+        if (isTexturesEmpty) {
+            // export empty array instead if all of the textures are null
+            textures.length = 0
+        } else {
+            textures.forEach((texture, i) => {
+                if (!texture) return
+
+                const { data, width, height } = texture
+                const buffer = toPNG(width, height, data)
+                const outputFilename = path.resolve(dirname, `${basename}_${type}_${i}.png`);
+
+                fs.writeFileSync(outputFilename, buffer);
+
+                // set the data path of the exported image
+                textures[i] = path.basename(outputFilename);
+            })
+        }
+    })
+}
+
 /**
  * Resolves all exported content back into the object
- * @param {String} filename 
+ * @param {String} filename
  * @returns {Object}
  */
 const resolveImports = filename => {
@@ -136,7 +168,7 @@ const resolveImports = filename => {
 
         if (exported == undefined)
             throw new XnbError('Invalid file export!');
-        
+
         // form the path for the exported file
         const exportedPath = path.join(dirname, exported);
         // load in the exported file
@@ -178,7 +210,7 @@ const resolveImports = filename => {
                     data: exportedFile
                 }
                 break;
-            
+
             // BmFont Xml
             case '.xml':
                 json['content'] = {
@@ -186,7 +218,7 @@ const resolveImports = filename => {
                     data: exportedFile.toString()
                 }
                 break;
-        }   
+        }
     }
 
     // return the JSON
@@ -252,7 +284,7 @@ const toPNG = (width, height, buffer) => {
 
 /**
  * Converts PNG to Texture2D
- * @param {Buffer} data 
+ * @param {Buffer} data
  * @returns {Object}
  */
 const fromPNG = data => {
