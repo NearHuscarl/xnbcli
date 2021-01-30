@@ -81,8 +81,8 @@ const exportFile = (filename, xnbObject) => {
         }
 
         if (exported.type === 'SFDItem') {
-            exportSFDItem(exported.data, filename)
-            delete content.parts
+            exportSFDItem(exported.data, filename, xnbObject)
+            return true
         } else {
             // output file name
             const outputFilename = path.resolve(dirname, `${basename}.${extension}`);
@@ -104,9 +104,13 @@ const exportFile = (filename, xnbObject) => {
 
 exports.exportFile = exportFile;
 
-function exportSFDItem(exportedData, fileName) {
-    const dirname = path.dirname(fileName);
+function exportSFDItem(exportedData, fileName, xnbObject) {
     const basename = path.basename(fileName, '.json');
+    const dirname = path.join(path.dirname(fileName), basename);
+
+    if (!fs.existsSync(dirname)) {
+        fs.mkdirSync(dirname)
+    }
 
     exportedData.forEach(({ textures, type }) => {
         const isTexturesEmpty = textures.filter(Boolean).length === 0
@@ -129,6 +133,9 @@ function exportSFDItem(exportedData, fileName) {
             })
         }
     })
+
+    const jsonPath = path.join(dirname, `${basename}.json`)
+    fs.writeFileSync(jsonPath, JSON.stringify(xnbObject, null, 4));
 }
 
 /**

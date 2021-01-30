@@ -92,7 +92,6 @@ class SFDItemReader extends BaseReader {
     }
 
     return {
-      parts,
       gameName,
       fileName,
       equipmentLayer,
