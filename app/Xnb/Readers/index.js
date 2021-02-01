@@ -22,6 +22,7 @@ const readers = [
     'Vector3Reader',
     'Vector4Reader',
     'SFDItemReader',
+    'SFDAnimationReader',
 ];
 
 // loop over readers to export them
@@ -50,5 +51,6 @@ module.exports = {
     Vector2Reader: require('./Vector2Reader'),
     Vector3Reader: require('./Vector3Reader'),
     Vector4Reader: require('./Vector4Reader'),
-    SFDItemReader: require('./SFDItemReader')
+    SFDItemReader: require('./SFDItemReader'),
+    SFDAnimationReader: require('./SFDAnimationReader')
 };

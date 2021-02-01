@@ -106,6 +106,10 @@ const simplifyType = type => {
         case 'SFD.Content.ItemsContentTypeReader':
             return 'SFDItem'
 
+        // SFD animation data
+        case 'SFD.Content.AnimationsContentTypeReader':
+            return 'SFDAnimation'
+
         // unimplemented type catch
         default:
             throw new XnbError(`Non-implemented type found, cannot resolve type "${simple}", "${type}".`);

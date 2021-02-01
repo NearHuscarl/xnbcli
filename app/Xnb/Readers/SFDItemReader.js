@@ -121,7 +121,7 @@ class SFDItemReader extends BaseReader {
 
 module.exports = SFDItemReader;
 
-
+// EquipmentLayer
 // Equipment.GetText()
 // public static string GetText(int layer)
 // {
@@ -152,3 +152,16 @@ module.exports = SFDItemReader;
 //   }
 // }
 // }
+
+// ItemPart.Type
+// 0: head
+// 1: body
+// 2: arm
+// 3: fist
+// 4: leg
+
+// animations[0].frames[0].parts[0].id
+// id: AnimationPartData.GlobalId or globalId in short
+// localId = abs(globalId % 50)
+// ItemPart.Type = globalId / 50
+// Texture = ItemPart.Textures[localId]
