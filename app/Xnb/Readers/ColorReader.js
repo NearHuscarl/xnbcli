@@ -11,15 +11,15 @@ class ColorReader extends BaseReader {
     /**
      * Reads Rectangle from buffer.
      * @param {BufferReader} buffer
-     * @returns {{a: Number, r: Number, b: Number, g: Number}}
+     * @returns {Uint8Array}
      */
     read(buffer) {
-        const r = buffer.readByte();
-        const g = buffer.readByte();
-        const b = buffer.readByte();
-        const a = buffer.readByte();
-
-        return { r, g, b, a };
+        return new Uint8Array([
+             buffer.readByte(),
+             buffer.readByte(),
+             buffer.readByte(),
+             buffer.readByte(),
+        ])
     }
 
     /**

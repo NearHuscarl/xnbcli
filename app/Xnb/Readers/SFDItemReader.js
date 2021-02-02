@@ -56,23 +56,23 @@ class SFDItemReader extends BaseReader {
 
       for (let index2 = 0; index2 < length2; index2++) {
         if (booleanReader.read(buffer)) {
-          const defaultColor = { r: 0, g: 0, b: 0, a: 0 }
+          let color = [0, 0, 0, 0]
           const data = []
           let emptyImage = true
 
           for (let index3 = 0; index3 < size * 4; index3 += 4) {
             if (booleanReader.read(buffer)) {
-              data[index3] = defaultColor.r
-              data[index3 + 1] = defaultColor.g
-              data[index3 + 2] = defaultColor.b
-              data[index3 + 3] = defaultColor.a
+              data[index3] = color[0]
+              data[index3 + 1] = color[1]
+              data[index3 + 2] = color[2]
+              data[index3 + 3] = color[3]
             } else {
               const num3 = buffer.readByte()
+              data[index3] = color[0] = dynamicColorTable[num3][0]
+              data[index3 + 1] = color[1] = dynamicColorTable[num3][1]
+              data[index3 + 2] = color[2] = dynamicColorTable[num3][2]
+              data[index3 + 3] = color[3] = dynamicColorTable[num3][3]
               emptyImage = false
-              data[index3] = dynamicColorTable[num3].r
-              data[index3 + 1] = dynamicColorTable[num3].g
-              data[index3 + 2] = dynamicColorTable[num3].b
-              data[index3 + 3] = dynamicColorTable[num3].a
             }
           }
 
@@ -165,3 +165,15 @@ module.exports = SFDItemReader;
 // localId = abs(globalId % 50)
 // ItemPart.Type = globalId / 50
 // Texture = ItemPart.Textures[localId]
+
+// Textures.RecolorTexture() applies the color to the texture whose pixels have the following colors
+// rgb(x, 0, 0): primary color
+// rgb(0, x, 0): secondary color
+// rgb(0, 0, x): tertiary color
+//
+// Where x is the shade of the color. It has following values:
+// 255: lightest
+// 192: lighter
+// 128: darkest
+// 64: never used
+// 32: never used
